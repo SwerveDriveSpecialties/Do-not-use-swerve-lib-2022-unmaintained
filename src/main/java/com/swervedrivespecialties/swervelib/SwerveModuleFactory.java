@@ -30,7 +30,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
                 moduleConfiguration
         );
         var steerContainer = steerControllerFactory.create(
-                container,
+                container.getLayout("Steer", BuiltInLayouts.kList),
                 steerConfiguration,
                 moduleConfiguration
         );

@@ -10,6 +10,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.SteerController;
 import com.swervedrivespecialties.swervelib.SteerControllerFactory;
+import com.swervedrivespecialties.swervelib.motion.MotionProfile;
+import com.swervedrivespecialties.swervelib.motion.TrapezoidalMotionProfile;
 
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;

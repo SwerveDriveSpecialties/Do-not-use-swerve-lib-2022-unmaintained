@@ -1,5 +1,6 @@
 package com.swervedrivespecialties.examples.mk3minibot.subsystems;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.swervedrivespecialties.examples.mk3minibot.Constants;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -30,6 +31,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0)
     );
+
+    private final PigeonIMU gyroscope = new PigeonIMU(Constants.DRIVETRAIN_PIGEON_ID);
 
     public DrivetrainSubsystem() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drivetrain");
@@ -77,6 +80,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
                 Constants.BACK_RIGHT_MODULE_STEER_OFFSET
         );
+    }
+
+    public void zeroGyroscope() {
+        gyroscope.setFusedHeading(0.0);
+    }
+
+    public Rotation2d getRotation() {
+        return Rotation2d.fromDegrees(gyroscope.getFusedHeading());
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {

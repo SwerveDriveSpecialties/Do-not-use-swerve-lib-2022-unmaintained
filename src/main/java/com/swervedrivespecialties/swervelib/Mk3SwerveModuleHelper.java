@@ -16,9 +16,9 @@ public final class Mk3SwerveModuleHelper {
                         .withVoltageCompensation(12.0)
                         .build(),
                 new Falcon500SteerControllerFactoryBuilder()
-                        .withPidConstants(0.1, 0.0, 0.0)
-                        .withMotionMagic(0.272832, 0.0133308, 0.048979)
                         .withVoltageCompensation(12.0)
+                        .withPidConstants(0.1, 0.0, 0.0)
+//                        .withMotionMagic(0.272832, 0.0133308, 0.048979)
                         .buildWithCanCoder()
         );
     }
