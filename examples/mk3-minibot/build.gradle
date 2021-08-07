@@ -1,0 +1,43 @@
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+    id 'edu.wpi.first.GradleRIO'
+}
+
+application {
+    mainClassName('com.swervedrivespecialties.examples.mk3minibot.Main')
+}
+
+targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_11
+
+deploy {
+    targets {
+        roboRIO('roborio') {
+            team frc.getTeamOrDefault(2910)
+        }
+    }
+    artifacts {
+        frcJavaArtifact('frcJava') {
+            jar 'shadowJar'
+            targets << 'roborio'
+
+            debug frc.getDebugOrDefault(false)
+        }
+    }
+}
+
+dependencies {
+    implementation wpi.deps.wpilib()
+    implementation wpi.deps.vendor.java()
+
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+
+    implementation project(':')
+}
