@@ -4,6 +4,7 @@ import com.swervedrivespecialties.examples.mk3minibot.commands.DriveCommand;
 import com.swervedrivespecialties.examples.mk3minibot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 public class RobotContainer {
     private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
@@ -19,6 +20,9 @@ public class RobotContainer {
                 () -> modifyAxis(controller.getX(GenericHID.Hand.kLeft)),
                 () -> modifyAxis(controller.getX(GenericHID.Hand.kRight))
         ));
+
+        new Button(controller::getBackButtonPressed)
+                .whenPressed(drivetrain::zeroGyroscope);
     }
 
     public DrivetrainSubsystem getDrivetrain() {
