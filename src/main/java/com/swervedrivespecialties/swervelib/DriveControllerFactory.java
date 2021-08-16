@@ -2,6 +2,7 @@ package com.swervedrivespecialties.swervelib;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
+@FunctionalInterface
 public interface DriveControllerFactory<DriveConfiguration> {
     DriveController create(DriveConfiguration driveConfiguration, ModuleConfiguration moduleConfiguration);
 

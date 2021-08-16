@@ -1,8 +1,12 @@
 package com.swervedrivespecialties.swervelib;
 
+import com.swervedrivespecialties.swervelib.ctre.CanCoderFactoryBuilder;
 import com.swervedrivespecialties.swervelib.ctre.Falcon500CanCoderSteerConfiguration;
 import com.swervedrivespecialties.swervelib.ctre.Falcon500DriveControllerFactoryBuilder;
 import com.swervedrivespecialties.swervelib.ctre.Falcon500SteerControllerFactoryBuilder;
+import com.swervedrivespecialties.swervelib.rev.NeoDriveControllerFactoryBuilder;
+import com.swervedrivespecialties.swervelib.rev.NeoSteerConfiguration;
+import com.swervedrivespecialties.swervelib.rev.NeoSteerControllerFactoryBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public final class Mk3SwerveModuleHelper {
@@ -20,6 +24,20 @@ public final class Mk3SwerveModuleHelper {
                         .withPidConstants(0.1, 0.0, 0.0)
 //                        .withMotionMagic(0.272832, 0.0133308, 0.048979)
                         .buildWithCanCoder()
+        );
+    }
+
+    private static SwerveModuleFactory<Integer, NeoSteerConfiguration<CanCoderFactoryBuilder.AbsoluteConfiguration>> getNeoFactory(GearRatio gearRatio) {
+        return new SwerveModuleFactory<>(
+                gearRatio.getConfiguration(),
+                new NeoDriveControllerFactoryBuilder()
+                        .withVoltageCompensation(12.0)
+                        .build(),
+                new NeoSteerControllerFactoryBuilder()
+                        .withVoltageCompensation(12.0)
+                        .withPidConstants(1.0, 0.0, 0.1)
+                        .withCurrentLimit(20.0)
+                        .build(new CanCoderFactoryBuilder().build())
         );
     }
 
@@ -74,6 +92,38 @@ public final class Mk3SwerveModuleHelper {
         return factory.create(
                 driveMotorPort,
                 new Falcon500CanCoderSteerConfiguration(steerMotorPort, steerEncoderPort, steerOffset));
+    }
+
+    public static SwerveModule createNeo(
+            ShuffleboardLayout container,
+            GearRatio gearRatio,
+            int driveMotorPort,
+            int steerMotorPort,
+            int steerEncoderPort,
+            double steerOffset
+    ) {
+        var factory = getNeoFactory(gearRatio);
+
+        return factory.create(
+                container,
+                driveMotorPort,
+                new NeoSteerConfiguration<>(steerMotorPort, new CanCoderFactoryBuilder.AbsoluteConfiguration(steerEncoderPort, steerOffset))
+        );
+    }
+
+    public static SwerveModule createNeo(
+            GearRatio gearRatio,
+            int driveMotorPort,
+            int steerMotorPort,
+            int steerEncoderPort,
+            double steerOffset
+    ) {
+        var factory = getNeoFactory(gearRatio);
+
+        return factory.create(
+                driveMotorPort,
+                new NeoSteerConfiguration<>(steerMotorPort, new CanCoderFactoryBuilder.AbsoluteConfiguration(steerEncoderPort, steerOffset))
+        );
     }
 
     public enum GearRatio {

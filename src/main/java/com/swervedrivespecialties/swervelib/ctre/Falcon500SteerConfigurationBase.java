@@ -28,7 +28,7 @@ public abstract class Falcon500SteerConfigurationBase {
 
     @Override
     public String toString() {
-        return "ConfigurationBase{" +
+        return "Falcon500SteerConfigurationBase{" +
                 "motorPort=" + motorPort +
                 '}';
     }

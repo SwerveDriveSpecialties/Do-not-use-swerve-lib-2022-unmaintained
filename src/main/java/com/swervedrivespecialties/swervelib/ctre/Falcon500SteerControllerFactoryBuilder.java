@@ -181,9 +181,9 @@ public final class Falcon500SteerControllerFactoryBuilder {
         }
 
         @Override
-        public void setReferenceAngle(double steerAngle) {
-            referenceAngleConsumer.accept(steerAngle);
-            this.referenceAngle = steerAngle;
+        public void setReferenceAngle(double referenceAngleRadians) {
+            referenceAngleConsumer.accept(referenceAngleRadians);
+            this.referenceAngle = referenceAngleRadians;
         }
 
         @Override

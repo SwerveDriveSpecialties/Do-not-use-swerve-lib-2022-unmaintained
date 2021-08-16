@@ -30,6 +30,9 @@ public final class Falcon500DriveControllerFactoryBuilder {
         public DriveController create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
+            // TODO: Configure builtin encoder
+            // TODO: Configure CAN frame rates
+
             if (hasVoltageCompensation()) {
                 motorConfiguration.voltageCompSaturation = nominalVoltage;
             }

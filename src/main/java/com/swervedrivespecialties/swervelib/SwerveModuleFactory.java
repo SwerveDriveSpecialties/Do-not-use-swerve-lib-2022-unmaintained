@@ -25,12 +25,12 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
 
     public SwerveModule create(ShuffleboardLayout container, DriveConfiguration driveConfiguration, SteerConfiguration steerConfiguration) {
         var driveController = driveControllerFactory.create(
-                container.getLayout("Drive", BuiltInLayouts.kList),
+                container,
                 driveConfiguration,
                 moduleConfiguration
         );
         var steerContainer = steerControllerFactory.create(
-                container.getLayout("Steer", BuiltInLayouts.kList),
+                container,
                 steerConfiguration,
                 moduleConfiguration
         );
