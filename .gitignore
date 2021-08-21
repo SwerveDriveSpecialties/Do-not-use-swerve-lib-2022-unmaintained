@@ -1,7 +1,7 @@
 # Gradle build outputs
 /.gradle/
 /build/
-/examples/mk3-minibot/build/
+/examples/*/build/
 
 # Intellij Project Files
 /.idea/
