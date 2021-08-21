@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'com.jfrog.artifactory'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -34,7 +33,7 @@ dependencies {
     // REV is implementation because it is not a hard requirement
     implementation 'com.revrobotics.frc:SparkMax-java:1.5.4'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
@@ -42,26 +41,6 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-        }
-    }
-}
-
-artifactory {
-    contextUrl = 'http://localhost:8081/artifactory'
-    publish {
-        contextUrl = 'http://localhost:8081/artifactory'
-
-        repository {
-            repoKey = 'sds-libs-snapshot-local'
-            username = 'jacob'
-            password = 'ArtifactPass1'
-        }
-
-        defaults {
-            publications('mavenJava')
-            publishArtifacts = true
-
-            publishPom = true
         }
     }
 }
