@@ -20,13 +20,13 @@ public final class NeoDriveControllerFactoryBuilder {
         return Double.isFinite(nominalVoltage);
     }
 
-    public DriveControllerFactory<Integer> build() {
+    public DriveControllerFactory<ControllerImplementation, Integer> build() {
         return new FactoryImplementation();
     }
 
-    private class FactoryImplementation implements DriveControllerFactory<Integer> {
+    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
         @Override
-        public DriveController create(Integer id, ModuleConfiguration moduleConfiguration) {
+        public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) {
             CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
             motor.setInverted(moduleConfiguration.getDriveReductions().length % 2 == 0);
 

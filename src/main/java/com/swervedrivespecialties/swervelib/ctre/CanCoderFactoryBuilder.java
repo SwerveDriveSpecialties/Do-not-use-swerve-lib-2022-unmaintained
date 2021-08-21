@@ -10,7 +10,7 @@ import com.swervedrivespecialties.swervelib.AbsoluteEncoderFactory;
 public class CanCoderFactoryBuilder {
     private Direction direction = Direction.COUNTER_CLOCKWISE;
 
-    public AbsoluteEncoderFactory<AbsoluteConfiguration> build() {
+    public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() {
         return configuration -> {
             CANCoderConfiguration config = new CANCoderConfiguration();
             config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
@@ -43,24 +43,6 @@ public class CanCoderFactoryBuilder {
             }
 
             return angle;
-        }
-    }
-
-    public static class AbsoluteConfiguration {
-        private final int id;
-        private final double offset;
-
-        public AbsoluteConfiguration(int id, double offset) {
-            this.id = id;
-            this.offset = offset;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public double getOffset() {
-            return offset;
         }
     }
 

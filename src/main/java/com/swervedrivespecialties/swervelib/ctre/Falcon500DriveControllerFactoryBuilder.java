@@ -21,13 +21,13 @@ public final class Falcon500DriveControllerFactoryBuilder {
         return Double.isFinite(nominalVoltage);
     }
 
-    public DriveControllerFactory<Integer> build() {
+    public DriveControllerFactory<ControllerImplementation, Integer> build() {
         return new FactoryImplementation();
     }
 
-    private class FactoryImplementation implements DriveControllerFactory<Integer> {
+    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
         @Override
-        public DriveController create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
+        public ControllerImplementation create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
             // TODO: Configure builtin encoder

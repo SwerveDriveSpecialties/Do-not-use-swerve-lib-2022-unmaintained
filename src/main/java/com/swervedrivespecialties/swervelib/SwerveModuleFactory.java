@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
     private final ModuleConfiguration moduleConfiguration;
-    private final DriveControllerFactory<DriveConfiguration> driveControllerFactory;
+    private final DriveControllerFactory<?, DriveConfiguration> driveControllerFactory;
     private final SteerControllerFactory<?, SteerConfiguration> steerControllerFactory;
 
     public SwerveModuleFactory(ModuleConfiguration moduleConfiguration,
-                               DriveControllerFactory<DriveConfiguration> driveControllerFactory,
+                               DriveControllerFactory<?, DriveConfiguration> driveControllerFactory,
                                SteerControllerFactory<?, SteerConfiguration> steerControllerFactory) {
         this.moduleConfiguration = moduleConfiguration;
         this.driveControllerFactory = driveControllerFactory;

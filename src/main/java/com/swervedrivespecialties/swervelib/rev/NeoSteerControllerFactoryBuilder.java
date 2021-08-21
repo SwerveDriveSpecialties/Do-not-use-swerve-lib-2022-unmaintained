@@ -13,12 +13,6 @@ public class NeoSteerControllerFactoryBuilder {
     private double nominalVoltage = Double.NaN;
     private double currentLimit = Double.NaN;
 
-    private void checkNeoError(CANError error, String message) {
-        if (error != CANError.kOk) {
-            throw new RuntimeException(message);
-        }
-    }
-
     public NeoSteerControllerFactoryBuilder withPidConstants(double proportional, double integral, double derivative) {
         this.pidProportional = proportional;
         this.pidIntegral = integral;
@@ -70,32 +64,33 @@ public class NeoSteerControllerFactoryBuilder {
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
-            checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
+            RevUtils.checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             motor.setInverted(moduleConfiguration.getSteerReductions().length % 2 == 0);
             if (hasVoltageCompensation()) {
-                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
+                RevUtils.checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
             }
             if (hasCurrentLimit()) {
-                checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
+                RevUtils.checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
             }
 
             CANEncoder integratedEncoder = motor.getEncoder();
-            checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getOverallSteerReduction()), "Failed to set NEO encoder conversion factor");
-            checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
+            RevUtils.checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getOverallSteerReduction()), "Failed to set NEO encoder conversion factor");
+            RevUtils.checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             CANPIDController controller = motor.getPIDController();
             if (hasPidConstants()) {
-                checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
-                checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
-                checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
+                RevUtils.checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
+                RevUtils.checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
+                RevUtils.checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
             }
-            checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
+            RevUtils.checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
 
             return new ControllerImplementation(motor, absoluteEncoder);
         }
     }
 
     public static class ControllerImplementation implements SteerController {
+        @SuppressWarnings({"FieldCanBeLocal", "unused"})
         private final CANSparkMax motor;
         private final CANPIDController controller;
         private final CANEncoder motorEncoder;
@@ -133,8 +128,7 @@ public class NeoSteerControllerFactoryBuilder {
 
             this.referenceAngleRadians = referenceAngleRadians;
 
-
-            motor.getPIDController().setReference(adjustedReferenceAngleRadians, ControlType.kPosition);
+            controller.setReference(adjustedReferenceAngleRadians, ControlType.kPosition);
         }
 
         @Override
