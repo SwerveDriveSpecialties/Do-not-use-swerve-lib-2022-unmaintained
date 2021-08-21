@@ -23,6 +23,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
     private double staticConstant = Double.NaN;
 
     private double nominalVoltage = Double.NaN;
+    private double currentLimit = Double.NaN;
 
     public Falcon500SteerControllerFactoryBuilder withPidConstants(double proportional, double integral, double derivative) {
         this.proportionalConstant = proportional;
@@ -53,6 +54,15 @@ public final class Falcon500SteerControllerFactoryBuilder {
 
     public boolean hasVoltageCompensation() {
         return Double.isFinite(nominalVoltage);
+    }
+
+    public Falcon500SteerControllerFactoryBuilder withCurrentLimit(double currentLimit) {
+        this.currentLimit = currentLimit;
+        return this;
+    }
+
+    public boolean hasCurrentLimit() {
+        return Double.isFinite(currentLimit);
     }
 
     public <T> SteerControllerFactory<ControllerImplementation, Falcon500SteerConfiguration<T>> build(AbsoluteEncoderFactory<T> absoluteEncoderFactory) {
@@ -91,6 +101,10 @@ public final class Falcon500SteerControllerFactoryBuilder {
             }
             if (hasVoltageCompensation()) {
                 motorConfiguration.voltageCompSaturation = nominalVoltage;
+            }
+            if (hasCurrentLimit()) {
+                motorConfiguration.supplyCurrLimit.currentLimit = currentLimit;
+                motorConfiguration.supplyCurrLimit.enable = true;
             }
 
             // TODO: Current limiting

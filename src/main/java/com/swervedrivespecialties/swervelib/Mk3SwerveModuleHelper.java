@@ -19,7 +19,8 @@ public final class Mk3SwerveModuleHelper {
     private static SteerControllerFactory<?, Falcon500SteerConfiguration<CanCoderAbsoluteConfiguration>> getFalcon500SteerFactory() {
         return new Falcon500SteerControllerFactoryBuilder()
                 .withVoltageCompensation(12.0)
-                .withPidConstants(0.1, 0.0, 0.0)
+                .withPidConstants(0.2, 0.0, 0.1)
+                .withCurrentLimit(20.0)
                 .build(new CanCoderFactoryBuilder().build());
     }
 
