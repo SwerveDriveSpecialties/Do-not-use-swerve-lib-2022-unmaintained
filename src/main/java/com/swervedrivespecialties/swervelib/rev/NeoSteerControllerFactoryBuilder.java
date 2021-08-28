@@ -65,7 +65,7 @@ public class NeoSteerControllerFactoryBuilder {
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
             RevUtils.checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
-            motor.setInverted(moduleConfiguration.isSteerInverted());
+            motor.setInverted(!moduleConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {
                 RevUtils.checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
             }
