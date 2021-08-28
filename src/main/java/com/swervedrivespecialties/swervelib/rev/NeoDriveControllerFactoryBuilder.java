@@ -28,7 +28,7 @@ public final class NeoDriveControllerFactoryBuilder {
         @Override
         public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) {
             CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
-            motor.setInverted(moduleConfiguration.getDriveReductions().length % 2 == 0);
+            motor.setInverted(moduleConfiguration.isDriveInverted());
 
             // TODO: Configure builtin encoder
             // TODO: Configure CAN frame rates

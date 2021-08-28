@@ -65,7 +65,7 @@ public class NeoSteerControllerFactoryBuilder {
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
             RevUtils.checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
-            motor.setInverted(moduleConfiguration.getSteerReductions().length % 2 == 0);
+            motor.setInverted(moduleConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {
                 RevUtils.checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
             }
@@ -74,7 +74,7 @@ public class NeoSteerControllerFactoryBuilder {
             }
 
             CANEncoder integratedEncoder = motor.getEncoder();
-            RevUtils.checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getOverallSteerReduction()), "Failed to set NEO encoder conversion factor");
+            RevUtils.checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
             RevUtils.checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             CANPIDController controller = motor.getPIDController();

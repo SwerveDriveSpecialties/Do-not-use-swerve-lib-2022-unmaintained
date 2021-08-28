@@ -1,21 +1,26 @@
 package com.swervedrivespecialties.swervelib;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ModuleConfiguration {
     private final String modelIdentifier;
 
     private final double wheelDiameter;
-    private final double[] driveReductions;
+    private final double driveReduction;
+    private final boolean driveInverted;
 
-    private final double[] steerReductions;
+    private final double steerReduction;
+    private final boolean steerInverted;
 
-    public ModuleConfiguration(String modelIdentifier, double wheelDiameter, double[] driveReductions, double[] steerReductions) {
-        this.modelIdentifier = modelIdentifier;
+    public ModuleConfiguration(String modelIdentifier,
+                               double wheelDiameter, double driveReduction, boolean driveInverted,
+                               double steerReduction, boolean steerInverted) {
+        this.modelIdentifier = Objects.requireNonNull(modelIdentifier);
         this.wheelDiameter = wheelDiameter;
-        this.driveReductions = driveReductions;
-        this.steerReductions = steerReductions;
+        this.driveReduction = driveReduction;
+        this.driveInverted = driveInverted;
+        this.steerReduction = steerReduction;
+        this.steerInverted = steerInverted;
     }
 
     public String getModelIdentifier() {
@@ -26,20 +31,20 @@ public class ModuleConfiguration {
         return wheelDiameter;
     }
 
-    public double[] getDriveReductions() {
-        return driveReductions;
+    public double getDriveReduction() {
+        return driveReduction;
     }
 
-    public double getOverallDriveReduction() {
-        return Arrays.stream(getDriveReductions()).reduce(1.0, (a, b) -> a * b);
+    public boolean isDriveInverted() {
+        return driveInverted;
     }
 
-    public double[] getSteerReductions() {
-        return steerReductions;
+    public double getSteerReduction() {
+        return steerReduction;
     }
 
-    public double getOverallSteerReduction() {
-        return Arrays.stream(getSteerReductions()).reduce(1.0, (a, b) -> a * b);
+    public boolean isSteerInverted() {
+        return steerInverted;
     }
 
     @Override
@@ -47,15 +52,25 @@ public class ModuleConfiguration {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ModuleConfiguration that = (ModuleConfiguration) o;
-        return Double.compare(that.wheelDiameter, wheelDiameter) == 0 && modelIdentifier.equals(that.modelIdentifier) && Arrays.equals(driveReductions, that.driveReductions) && Arrays.equals(steerReductions, that.steerReductions);
+        return Double.compare(
+                that.getWheelDiameter(), getWheelDiameter()) == 0 &&
+                Double.compare(that.getDriveReduction(), getDriveReduction()) == 0 &&
+                isDriveInverted() == that.isDriveInverted() &&
+                Double.compare(that.getSteerReduction(), getSteerReduction()) == 0 &&
+                isSteerInverted() == that.isSteerInverted() &&
+                getModelIdentifier().equals(that.getModelIdentifier());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(modelIdentifier, wheelDiameter);
-        result = 31 * result + Arrays.hashCode(driveReductions);
-        result = 31 * result + Arrays.hashCode(steerReductions);
-        return result;
+        return Objects.hash(
+                getModelIdentifier(),
+                getWheelDiameter(),
+                getDriveReduction(),
+                isDriveInverted(),
+                getSteerReduction(),
+                isSteerInverted()
+        );
     }
 
     @Override
@@ -63,8 +78,10 @@ public class ModuleConfiguration {
         return "ModuleConfiguration{" +
                 "modelIdentifier='" + modelIdentifier + '\'' +
                 ", wheelDiameter=" + wheelDiameter +
-                ", driveReductions=" + Arrays.toString(driveReductions) +
-                ", steerReductions=" + Arrays.toString(steerReductions) +
+                ", driveReduction=" + driveReduction +
+                ", driveInverted=" + driveInverted +
+                ", steerReduction=" + steerReduction +
+                ", steerInverted=" + steerInverted +
                 '}';
     }
 }

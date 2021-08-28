@@ -80,7 +80,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
         public ControllerImplementation create(Falcon500SteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) {
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
-            final double sensorPositionCoefficient = 2.0 * Math.PI / TICKS_PER_ROTATION * moduleConfiguration.getOverallSteerReduction();
+            final double sensorPositionCoefficient = 2.0 * Math.PI / TICKS_PER_ROTATION * moduleConfiguration.getSteerReduction();
             final double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
@@ -116,7 +116,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
                 motor.enableVoltageCompensation(true);
             }
             checkCtreError(motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 250), "Failed to set Falcon 500 feedback sensor");
-            motor.setSensorPhase(moduleConfiguration.getSteerReductions().length % 2 == 0);
+            motor.setSensorPhase(moduleConfiguration.isSteerInverted());
             motor.setNeutralMode(NeutralMode.Brake);
 
             checkCtreError(motor.setSelectedSensorPosition(absoluteEncoder.getAbsoluteAngle() / sensorPositionCoefficient, 0, 250), "Failed to set Falcon 500 encoder position");
