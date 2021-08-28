@@ -1,7 +1,7 @@
-package com.swervedrivespecialties.examples.mk3minibot.subsystems;
+package com.swervedrivespecialties.examples.mk3testchassis.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.swervedrivespecialties.examples.mk3minibot.Constants;
+import com.swervedrivespecialties.examples.mk3testchassis.Constants;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
