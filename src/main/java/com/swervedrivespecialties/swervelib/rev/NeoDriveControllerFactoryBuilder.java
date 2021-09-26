@@ -11,6 +11,7 @@ import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
 
 public final class NeoDriveControllerFactoryBuilder {
     private double nominalVoltage = Double.NaN;
+    private double currentLimit = Double.NaN;
 
     public NeoDriveControllerFactoryBuilder withVoltageCompensation(double nominalVoltage) {
         this.nominalVoltage = nominalVoltage;
@@ -19,6 +20,15 @@ public final class NeoDriveControllerFactoryBuilder {
 
     public boolean hasVoltageCompensation() {
         return Double.isFinite(nominalVoltage);
+    }
+
+    public NeoDriveControllerFactoryBuilder withCurrentLimit(double currentLimit) {
+        this.currentLimit = currentLimit;
+        return this;
+    }
+
+    public boolean hasCurrentLimit() {
+        return Double.isFinite(currentLimit);
     }
 
     public DriveControllerFactory<ControllerImplementation, Integer> build() {
@@ -36,6 +46,10 @@ public final class NeoDriveControllerFactoryBuilder {
             // Setup voltage compensation
             if (hasVoltageCompensation()) {
                 checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
+            }
+
+            if (hasCurrentLimit()) {
+                checkNeoError(motor.setSmartCurrentLimit((int) currentLimit), "Failed to set current limit for NEO");
             }
 
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");

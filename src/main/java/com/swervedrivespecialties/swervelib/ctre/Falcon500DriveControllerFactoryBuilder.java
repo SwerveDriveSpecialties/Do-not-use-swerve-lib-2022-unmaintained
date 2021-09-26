@@ -14,6 +14,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
     private static final int STATUS_FRAME_GENERAL_PERIOD_MS = 250;
 
     private double nominalVoltage = Double.NaN;
+    private double currentLimit = Double.NaN;
 
     public Falcon500DriveControllerFactoryBuilder withVoltageCompensation(double nominalVoltage) {
         this.nominalVoltage = nominalVoltage;
@@ -28,6 +29,15 @@ public final class Falcon500DriveControllerFactoryBuilder {
         return new FactoryImplementation();
     }
 
+    public Falcon500DriveControllerFactoryBuilder withCurrentLimit(double currentLimit) {
+        this.currentLimit = currentLimit;
+        return this;
+    }
+
+    public boolean hasCurrentLimit() {
+        return Double.isFinite(currentLimit);
+    }
+
     private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
         @Override
         public ControllerImplementation create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
@@ -35,6 +45,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
 
             if (hasVoltageCompensation()) {
                 motorConfiguration.voltageCompSaturation = nominalVoltage;
+            }
+
+            if (hasCurrentLimit()) {
+                motorConfiguration.supplyCurrLimit.currentLimit = currentLimit;
+                motorConfiguration.supplyCurrLimit.enable = true;
             }
 
             TalonFX motor = new TalonFX(driveConfiguration);
