@@ -80,6 +80,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
             CANEncoder integratedEncoder = motor.getEncoder();
             checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
+            checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
             checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             CANPIDController controller = motor.getPIDController();
@@ -95,6 +96,9 @@ public final class NeoSteerControllerFactoryBuilder {
     }
 
     public static class ControllerImplementation implements SteerController {
+        private static final int ENCODER_RESET_ITERATIONS = 500;
+        private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
+
         @SuppressWarnings({"FieldCanBeLocal", "unused"})
         private final CANSparkMax motor;
         private final CANPIDController controller;
@@ -102,6 +106,8 @@ public final class NeoSteerControllerFactoryBuilder {
         private final AbsoluteEncoder absoluteEncoder;
 
         private double referenceAngleRadians = 0;
+
+        private double resetIteration = 0;
 
         public ControllerImplementation(CANSparkMax motor, AbsoluteEncoder absoluteEncoder) {
             this.motor = motor;
@@ -118,6 +124,21 @@ public final class NeoSteerControllerFactoryBuilder {
         @Override
         public void setReferenceAngle(double referenceAngleRadians) {
             double currentAngleRadians = motorEncoder.getPosition();
+
+            // Reset the NEO's encoder periodically when the module is not rotating.
+            // Sometimes (~5% of the time) when we initialize, the absolute encoder isn't fully set up, and we don't
+            // end up getting a good reading. If we reset periodically this won't matter anymore.
+            if (motorEncoder.getVelocity() < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
+                if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
+                    resetIteration = 0;
+                    double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
+                    motorEncoder.setPosition(absoluteAngle);
+                    currentAngleRadians = absoluteAngle;
+                }
+            } else {
+                resetIteration = 0;
+            }
+
             double currentAngleRadiansMod = currentAngleRadians % (2.0 * Math.PI);
             if (currentAngleRadiansMod < 0.0) {
                 currentAngleRadiansMod += 2.0 * Math.PI;
