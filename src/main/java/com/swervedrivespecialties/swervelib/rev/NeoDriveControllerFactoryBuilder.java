@@ -1,12 +1,13 @@
 package com.swervedrivespecialties.swervelib.rev;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
+
+import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
 
 public final class NeoDriveControllerFactoryBuilder {
     private double nominalVoltage = Double.NaN;
@@ -31,17 +32,15 @@ public final class NeoDriveControllerFactoryBuilder {
             motor.setInverted(moduleConfiguration.isDriveInverted());
 
             // TODO: Configure builtin encoder
-            // TODO: Configure CAN frame rates
 
             // Setup voltage compensation
             if (hasVoltageCompensation()) {
-                CANError error = motor.enableVoltageCompensation(nominalVoltage);
-                if (error != CANError.kOk) {
-                    // Failed to enable voltage compensation
-                    throw new RuntimeException("Failed to enable voltage compensation for NEO");
-                }
+                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
             }
 
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
             // Set neutral mode to brake
             motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
