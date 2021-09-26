@@ -21,7 +21,9 @@ public final class Mk3SwerveModuleHelper {
                 .withVoltageCompensation(12.0)
                 .withPidConstants(0.2, 0.0, 0.1)
                 .withCurrentLimit(20.0)
-                .build(new CanCoderFactoryBuilder().build());
+                .build(new CanCoderFactoryBuilder()
+                        .withReadingUpdatePeriod(100)
+                        .build());
     }
 
     private static DriveControllerFactory<?, Integer> getNeoDriveFactory() {
@@ -35,7 +37,9 @@ public final class Mk3SwerveModuleHelper {
                 .withVoltageCompensation(12.0)
                 .withPidConstants(1.0, 0.0, 0.1)
                 .withCurrentLimit(20.0)
-                .build(new CanCoderFactoryBuilder().build());
+                .build(new CanCoderFactoryBuilder()
+                        .withReadingUpdatePeriod(100)
+                        .build());
     }
 
     /**

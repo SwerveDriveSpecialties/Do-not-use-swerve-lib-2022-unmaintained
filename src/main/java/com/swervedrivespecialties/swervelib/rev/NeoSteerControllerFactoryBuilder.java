@@ -4,7 +4,9 @@ import com.revrobotics.*;
 import com.swervedrivespecialties.swervelib.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
-public class NeoSteerControllerFactoryBuilder {
+import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
+
+public final class NeoSteerControllerFactoryBuilder {
     // PID configuration
     private double pidProportional = Double.NaN;
     private double pidIntegral = Double.NaN;
@@ -64,26 +66,29 @@ public class NeoSteerControllerFactoryBuilder {
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
-            RevUtils.checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+            checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             motor.setInverted(!moduleConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {
-                RevUtils.checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
+                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
             }
             if (hasCurrentLimit()) {
-                RevUtils.checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
+                checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
             }
 
             CANEncoder integratedEncoder = motor.getEncoder();
-            RevUtils.checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
-            RevUtils.checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
+            checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
+            checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             CANPIDController controller = motor.getPIDController();
             if (hasPidConstants()) {
-                RevUtils.checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
-                RevUtils.checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
-                RevUtils.checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
+                checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
+                checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
+                checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
             }
-            RevUtils.checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
+            checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
 
             return new ControllerImplementation(motor, absoluteEncoder);
         }
