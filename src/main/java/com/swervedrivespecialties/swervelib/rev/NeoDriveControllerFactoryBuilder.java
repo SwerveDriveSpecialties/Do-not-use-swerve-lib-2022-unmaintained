@@ -58,7 +58,16 @@ public final class NeoDriveControllerFactoryBuilder {
             // Set neutral mode to brake
             motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-            return new ControllerImplementation(motor, motor.getEncoder());
+            // Setup encoder
+            CANEncoder encoder = motor.getEncoder();
+            double positionConversionFactor = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction();
+            if (moduleConfiguration.isDriveInverted()) {
+                positionConversionFactor *= -1.0;
+            }
+            encoder.setPositionConversionFactor(positionConversionFactor);
+            encoder.setVelocityConversionFactor(positionConversionFactor / 60.0);
+
+            return new ControllerImplementation(motor, encoder);
         }
     }
 
