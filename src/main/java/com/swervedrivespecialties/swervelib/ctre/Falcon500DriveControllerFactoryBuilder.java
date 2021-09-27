@@ -10,6 +10,8 @@ import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 
 public final class Falcon500DriveControllerFactoryBuilder {
+    private static final double TICKS_PER_ROTATION = 2048.0;
+
     private static final int CAN_TIMEOUT_MS = 250;
     private static final int STATUS_FRAME_GENERAL_PERIOD_MS = 250;
 
@@ -43,6 +45,12 @@ public final class Falcon500DriveControllerFactoryBuilder {
         public ControllerImplementation create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
+            double sensorPositionCoefficient = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction() / TICKS_PER_ROTATION;
+            if (moduleConfiguration.isDriveInverted()) {
+                sensorPositionCoefficient *= -1.0;
+            }
+            double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
+
             if (hasVoltageCompensation()) {
                 motorConfiguration.voltageCompSaturation = nominalVoltage;
             }
@@ -72,16 +80,18 @@ public final class Falcon500DriveControllerFactoryBuilder {
                     "Failed to configure Falcon status frame period"
             );
 
-            return new ControllerImplementation(motor);
+            return new ControllerImplementation(motor, sensorVelocityCoefficient);
         }
     }
 
     private class ControllerImplementation implements DriveController {
         private final TalonFX motor;
+        private final double sensorVelocityCoefficient;
         private final double nominalVoltage = hasVoltageCompensation() ? Falcon500DriveControllerFactoryBuilder.this.nominalVoltage : 12.0;
 
-        private ControllerImplementation(TalonFX motor) {
+        private ControllerImplementation(TalonFX motor, double sensorVelocityCoefficient) {
             this.motor = motor;
+            this.sensorVelocityCoefficient = sensorVelocityCoefficient;
         }
 
         @Override
@@ -91,7 +101,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
 
         @Override
         public double getStateVelocity() {
-            return motor.getSelectedSensorVelocity();
+            return motor.getSelectedSensorVelocity() * sensorVelocityCoefficient;
         }
     }
 }
