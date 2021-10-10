@@ -3,6 +3,7 @@ package com.swervedrivespecialties.swervelib.ctre;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.swervedrivespecialties.swervelib.DriveController;
@@ -46,9 +47,9 @@ public final class Falcon500DriveControllerFactoryBuilder {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
             double sensorPositionCoefficient = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction() / TICKS_PER_ROTATION;
-            if (moduleConfiguration.isDriveInverted()) {
-                sensorPositionCoefficient *= -1.0;
-            }
+//            if (moduleConfiguration.isDriveInverted()) {
+//                sensorPositionCoefficient *= -1.0;
+//            }
             double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
             if (hasVoltageCompensation()) {
@@ -69,6 +70,9 @@ public final class Falcon500DriveControllerFactoryBuilder {
             }
 
             motor.setNeutralMode(NeutralMode.Brake);
+
+            motor.setInverted(moduleConfiguration.isDriveInverted() ? TalonFXInvertType.Clockwise : TalonFXInvertType.CounterClockwise);
+            motor.setSensorPhase(true);
 
             // Reduce CAN status frame rates
             CtreUtils.checkCtreError(
