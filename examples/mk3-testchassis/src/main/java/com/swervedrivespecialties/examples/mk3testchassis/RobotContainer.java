@@ -1,7 +1,7 @@
-package com.swervedrivespecialties.examples.mk3minibot;
+package com.swervedrivespecialties.examples.mk3testchassis;
 
-import com.swervedrivespecialties.examples.mk3minibot.commands.DriveCommand;
-import com.swervedrivespecialties.examples.mk3minibot.subsystems.DrivetrainSubsystem;
+import com.swervedrivespecialties.examples.mk3testchassis.commands.DriveCommand;
+import com.swervedrivespecialties.examples.mk3testchassis.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -16,9 +16,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(new DriveCommand(
                 drivetrain,
-                () -> modifyAxis(controller.getY(GenericHID.Hand.kLeft)), // Axes are flipped here on purpose
-                () -> modifyAxis(controller.getX(GenericHID.Hand.kLeft)),
-                () -> modifyAxis(controller.getX(GenericHID.Hand.kRight))
+                () -> -modifyAxis(controller.getY(GenericHID.Hand.kLeft)), // Axes are flipped here on purpose
+                () -> -modifyAxis(controller.getX(GenericHID.Hand.kLeft)),
+                () -> -modifyAxis(controller.getX(GenericHID.Hand.kRight))
         ));
 
         new Button(controller::getBackButtonPressed)

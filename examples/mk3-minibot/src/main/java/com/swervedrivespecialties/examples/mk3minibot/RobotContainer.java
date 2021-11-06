@@ -16,9 +16,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(new DriveCommand(
                 drivetrain,
-                () -> modifyAxis(controller.getY(GenericHID.Hand.kLeft)), // Axes are flipped here on purpose
-                () -> modifyAxis(controller.getX(GenericHID.Hand.kLeft)),
-                () -> modifyAxis(controller.getX(GenericHID.Hand.kRight))
+                () -> -modifyAxis(controller.getY(GenericHID.Hand.kLeft)), // Axes are flipped here on purpose
+                () -> -modifyAxis(controller.getX(GenericHID.Hand.kLeft)),
+                () -> -modifyAxis(controller.getX(GenericHID.Hand.kRight))
         ));
 
         new Button(controller::getBackButtonPressed)

@@ -1,13 +1,15 @@
-package com.swervedrivespecialties.examples.mk3minibot.subsystems;
+package com.swervedrivespecialties.examples.mk3testchassis.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.swervedrivespecialties.examples.mk3minibot.Constants;
+import com.swervedrivespecialties.examples.mk3testchassis.Constants;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -25,14 +27,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private final SwerveModule backLeftModule;
     private final SwerveModule backRightModule;
 
+    private final PigeonIMU gyroscope = new PigeonIMU(Constants.DRIVETRAIN_PIGEON_ID);
+
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             new Translation2d(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
             new Translation2d(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0)
     );
+    private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(gyroscope.getFusedHeading()));
 
-    private final PigeonIMU gyroscope = new PigeonIMU(Constants.DRIVETRAIN_PIGEON_ID);
+    private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
     public DrivetrainSubsystem() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drivetrain");
@@ -80,17 +85,36 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
                 Constants.BACK_RIGHT_MODULE_STEER_OFFSET
         );
+
+        shuffleboardTab.addNumber("Gyroscope Angle", () -> getRotation().getDegrees());
+        shuffleboardTab.addNumber("Pose X", () -> odometry.getPoseMeters().getX());
+        shuffleboardTab.addNumber("Pose Y", () -> odometry.getPoseMeters().getY());
     }
 
     public void zeroGyroscope() {
-        gyroscope.setFusedHeading(0.0);
+        odometry.resetPosition(
+                new Pose2d(odometry.getPoseMeters().getTranslation(), Rotation2d.fromDegrees(0.0)),
+                Rotation2d.fromDegrees(gyroscope.getFusedHeading())
+        );
     }
 
     public Rotation2d getRotation() {
-        return Rotation2d.fromDegrees(gyroscope.getFusedHeading());
+        return odometry.getPoseMeters().getRotation();
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
+        this.chassisSpeeds = chassisSpeeds;
+    }
+
+    @Override
+    public void periodic() {
+        odometry.update(Rotation2d.fromDegrees(gyroscope.getFusedHeading()),
+                new SwerveModuleState(frontLeftModule.getDriveVelocity(), new Rotation2d(frontLeftModule.getSteerAngle())),
+                new SwerveModuleState(frontRightModule.getDriveVelocity(), new Rotation2d(frontRightModule.getSteerAngle())),
+                new SwerveModuleState(backLeftModule.getDriveVelocity(), new Rotation2d(backLeftModule.getSteerAngle())),
+                new SwerveModuleState(backRightModule.getDriveVelocity(), new Rotation2d(backRightModule.getSteerAngle()))
+        );
+
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
 
         frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
