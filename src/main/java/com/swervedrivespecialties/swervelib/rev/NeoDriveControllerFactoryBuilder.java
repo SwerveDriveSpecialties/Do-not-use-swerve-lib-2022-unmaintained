@@ -41,8 +41,6 @@ public final class NeoDriveControllerFactoryBuilder {
             CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
             motor.setInverted(moduleConfiguration.isDriveInverted());
 
-            // TODO: Configure builtin encoder
-
             // Setup voltage compensation
             if (hasVoltageCompensation()) {
                 checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
@@ -61,9 +59,6 @@ public final class NeoDriveControllerFactoryBuilder {
             // Setup encoder
             CANEncoder encoder = motor.getEncoder();
             double positionConversionFactor = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction();
-            if (moduleConfiguration.isDriveInverted()) {
-                positionConversionFactor *= -1.0;
-            }
             encoder.setPositionConversionFactor(positionConversionFactor);
             encoder.setVelocityConversionFactor(positionConversionFactor / 60.0);
 

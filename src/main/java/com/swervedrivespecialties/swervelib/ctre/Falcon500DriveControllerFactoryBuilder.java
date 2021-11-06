@@ -47,9 +47,6 @@ public final class Falcon500DriveControllerFactoryBuilder {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
             double sensorPositionCoefficient = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction() / TICKS_PER_ROTATION;
-//            if (moduleConfiguration.isDriveInverted()) {
-//                sensorPositionCoefficient *= -1.0;
-//            }
             double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
             if (hasVoltageCompensation()) {
