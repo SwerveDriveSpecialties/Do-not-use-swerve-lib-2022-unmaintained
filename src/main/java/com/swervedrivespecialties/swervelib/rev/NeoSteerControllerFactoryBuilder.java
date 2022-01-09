@@ -78,12 +78,12 @@ public final class NeoSteerControllerFactoryBuilder {
                 checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
             }
 
-            CANEncoder integratedEncoder = motor.getEncoder();
+            RelativeEncoder integratedEncoder = motor.getEncoder();
             checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "Failed to set NEO encoder conversion factor");
             checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction() / 60.0), "Failed to set NEO encoder conversion factor");
             checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
-            CANPIDController controller = motor.getPIDController();
+            SparkMaxPIDController controller = motor.getPIDController();
             if (hasPidConstants()) {
                 checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
                 checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
@@ -101,8 +101,8 @@ public final class NeoSteerControllerFactoryBuilder {
 
         @SuppressWarnings({"FieldCanBeLocal", "unused"})
         private final CANSparkMax motor;
-        private final CANPIDController controller;
-        private final CANEncoder motorEncoder;
+        private final SparkMaxPIDController controller;
+        private final RelativeEncoder motorEncoder;
         private final AbsoluteEncoder absoluteEncoder;
 
         private double referenceAngleRadians = 0;
@@ -154,7 +154,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
             this.referenceAngleRadians = referenceAngleRadians;
 
-            controller.setReference(adjustedReferenceAngleRadians, ControlType.kPosition);
+            controller.setReference(adjustedReferenceAngleRadians, CANSparkMax.ControlType.kPosition);
         }
 
         @Override
