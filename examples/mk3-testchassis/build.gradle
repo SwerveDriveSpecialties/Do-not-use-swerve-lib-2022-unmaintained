@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClassName('com.swervedrivespecialties.examples.mk3testchassis.Main')
+    mainClass.set('com.swervedrivespecialties.examples.mk3testchassis.Main')
 }
 
 targetCompatibility = JavaVersion.VERSION_11
@@ -13,31 +13,44 @@ sourceCompatibility = JavaVersion.VERSION_11
 
 deploy {
     targets {
-        roboRIO('roborio') {
-            team frc.getTeamOrDefault(2910)
-        }
-    }
-    artifacts {
-        frcJavaArtifact('frcJava') {
-            jar 'shadowJar'
-            targets << 'roborio'
+        roborio(getTargetTypeClass('RoboRIO')) {
+            team = project.frc.getTeamOrDefault(2910)
+            debug = project.frc.getDebugOrDefault(false)
 
-            debug frc.getDebugOrDefault(false)
+            artifacts {
+                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+                    jarTask = shadowJar
+                }
+            }
         }
     }
 }
 
+wpi {
+    sim.addDriverstation()
+    sim.addGui().defaultEnabled.set(true)
+
+    java.configureExecutableTasks(shadowJar)
+    java.configureTestTasks(test)
+}
+
 dependencies {
-    implementation wpi.deps.wpilib()
-    implementation wpi.deps.vendor.java()
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
 
-    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
-    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
 
-    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
+
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
 
     implementation project(':')
 }
