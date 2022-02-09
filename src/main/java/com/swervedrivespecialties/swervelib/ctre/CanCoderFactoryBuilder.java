@@ -16,6 +16,11 @@ public class CanCoderFactoryBuilder {
         return this;
     }
 
+    public CanCoderFactoryBuilder withDirection(Direction direction) {
+        this.direction = direction;
+        return this;
+    }
+
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() {
         return configuration -> {
             CANCoderConfiguration config = new CANCoderConfiguration();
