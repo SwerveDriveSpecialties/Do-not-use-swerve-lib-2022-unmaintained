@@ -8,7 +8,7 @@ targetCompatibility = JavaVersion.VERSION_11
 
 allprojects {
     group 'com.swervedrivespecialties'
-    version '1.0.0-rc.1'
+    version '1.1.0'
 
     repositories {
         mavenCentral()
@@ -19,19 +19,19 @@ allprojects {
         maven { url = uri('https://devsite.ctr-electronics.com/maven/release/') }
 
         // REV
-        maven { url = uri('https://www.revrobotics.com/content/sw/max/sdk/maven/') }
+        maven { url = uri('https://maven.revrobotics.com/') }
     }
 }
 
 dependencies {
-    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2021.3.1'
+    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2022.1.1'
 
     // CTRE is implementation because it is not a hard requirement
-    implementation 'com.ctre.phoenix:api-java:5.19.4'
-    implementation 'com.ctre.phoenix:wpiapi-java:5.19.4'
+    implementation 'com.ctre.phoenix:api-java:5.20.2'
+    implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
 
     // REV is implementation because it is not a hard requirement
-    implementation 'com.revrobotics.frc:SparkMax-java:1.5.4'
+    implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

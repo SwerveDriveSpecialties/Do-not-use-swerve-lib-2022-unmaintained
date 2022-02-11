@@ -1,14 +1,25 @@
 package com.swervedrivespecialties.swervelib.ctre;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoderFactory;
 
 public class CanCoderFactoryBuilder {
     private Direction direction = Direction.COUNTER_CLOCKWISE;
+    private int periodMilliseconds = 10;
+
+    public CanCoderFactoryBuilder withReadingUpdatePeriod(int periodMilliseconds) {
+        this.periodMilliseconds = periodMilliseconds;
+        return this;
+    }
+
+    public CanCoderFactoryBuilder withDirection(Direction direction) {
+        this.direction = direction;
+        return this;
+    }
 
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() {
         return configuration -> {
@@ -18,10 +29,9 @@ public class CanCoderFactoryBuilder {
             config.sensorDirection = direction == Direction.CLOCKWISE;
 
             CANCoder encoder = new CANCoder(configuration.getId());
-            ErrorCode error = encoder.configAllSettings(config, 250);
-            if (error != ErrorCode.OK) {
-                throw new RuntimeException(String.format("Failed to configure CANCoder. (Error: %s)", error));
-            }
+            CtreUtils.checkCtreError(encoder.configAllSettings(config, 250), "Failed to configure CANCoder");
+
+            CtreUtils.checkCtreError(encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, periodMilliseconds, 250), "Failed to configure CANCoder update rate");
 
             return new EncoderImplementation(encoder);
         };

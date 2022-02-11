@@ -1,4 +1,4 @@
-package com.swervedrivespecialties.examples.mk3minibot;
+package com.swervedrivespecialties.examples.mk3testchassis;
 
 public class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.2794;
