@@ -1,14 +1,14 @@
 package com.swervedrivespecialties.swervelib.ctre;
 
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoderFactory;
 
 public class CanCoderFactoryBuilder {
-    private Direction direction = Direction.COUNTER_CLOCKWISE;
+    //    private Direction direction = Direction.COUNTER_CLOCKWISE;
     private int periodMilliseconds = 10;
 
     public CanCoderFactoryBuilder withReadingUpdatePeriod(int periodMilliseconds) {
@@ -17,36 +17,37 @@ public class CanCoderFactoryBuilder {
     }
 
     public CanCoderFactoryBuilder withDirection(Direction direction) {
-        this.direction = direction;
+//        this.direction = direction;
         return this;
     }
 
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() {
         return configuration -> {
-            CANCoderConfiguration config = new CANCoderConfiguration();
+            TalonFXConfiguration config = new TalonFXConfiguration();
             config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-            config.magnetOffsetDegrees = Math.toDegrees(configuration.getOffset());
-            config.sensorDirection = direction == Direction.CLOCKWISE;
+//            config.magnetOffsetDegrees = Math.toDegrees(configuration.getOffset());
+//            config.sensorDirection = direction == Direction.CLOCKWISE;
 
-            CANCoder encoder = new CANCoder(configuration.getId());
+            TalonFX encoder = new TalonFX(configuration.getId());
             CtreUtils.checkCtreError(encoder.configAllSettings(config, 250), "Failed to configure CANCoder");
 
-            CtreUtils.checkCtreError(encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, periodMilliseconds, 250), "Failed to configure CANCoder update rate");
+            CtreUtils.checkCtreError(encoder.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, periodMilliseconds, 250), "Failed to configure Talon update rate");
 
             return new EncoderImplementation(encoder);
         };
     }
 
     private static class EncoderImplementation implements AbsoluteEncoder {
-        private final CANCoder encoder;
+        private final TalonFX encoder;
 
-        private EncoderImplementation(CANCoder encoder) {
+        private EncoderImplementation(TalonFX encoder) {
             this.encoder = encoder;
         }
 
         @Override
         public double getAbsoluteAngle() {
-            double angle = Math.toRadians(encoder.getAbsolutePosition());
+            // check this if this works
+            double angle = Math.toRadians(encoder.getSelectedSensorPosition());
             angle %= 2.0 * Math.PI;
             if (angle < 0.0) {
                 angle += 2.0 * Math.PI;
