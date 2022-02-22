@@ -99,7 +99,7 @@ public final class NeoSteerControllerFactoryBuilder {
         private static final int ENCODER_RESET_ITERATIONS = 500;
         private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
 
-        @SuppressWarnings({"FieldCanBeLocal", "unused"})
+        @SuppressWarnings("FieldCanBeLocal")
         private final CANSparkMax motor;
         private final SparkMaxPIDController controller;
         private final RelativeEncoder motorEncoder;
@@ -114,6 +114,16 @@ public final class NeoSteerControllerFactoryBuilder {
             this.controller = motor.getPIDController();
             this.motorEncoder = motor.getEncoder();
             this.absoluteEncoder = absoluteEncoder;
+        }
+
+        @Override
+        public Object getSteerMotor() {
+            return this.motor;
+        }
+
+        @Override
+        public AbsoluteEncoder getSteerEncoder() {
+            return this.absoluteEncoder;
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.swervedrivespecialties.swervelib;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
@@ -45,6 +44,21 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
         private ModuleImplementation(DriveController driveController, SteerController steerController) {
             this.driveController = driveController;
             this.steerController = steerController;
+        }
+
+        @Override
+        public Object getDriveMotor() {
+            return driveController.getDriveMotor();
+        }
+
+        @Override
+        public Object getSteerMotor() {
+            return steerController.getSteerMotor();
+        }
+
+        @Override
+        public AbsoluteEncoder getSteerEncoder() {
+            return steerController.getSteerEncoder();
         }
 
         @Override

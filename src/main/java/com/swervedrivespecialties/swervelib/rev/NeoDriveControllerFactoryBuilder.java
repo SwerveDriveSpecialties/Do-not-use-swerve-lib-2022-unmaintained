@@ -76,6 +76,11 @@ public final class NeoDriveControllerFactoryBuilder {
         }
 
         @Override
+        public Object getDriveMotor() {
+            return this.motor;
+        }
+
+        @Override
         public void setReferenceVoltage(double voltage) {
             motor.setVoltage(voltage);
         }
