@@ -2,7 +2,6 @@ package com.swervedrivespecialties.examples.mk3minibot;
 
 import com.swervedrivespecialties.examples.mk3minibot.commands.DriveCommand;
 import com.swervedrivespecialties.examples.mk3minibot.subsystems.DrivetrainSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
