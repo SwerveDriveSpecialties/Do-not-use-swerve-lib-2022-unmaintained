@@ -127,13 +127,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
                 motorConfiguration.supplyCurrLimit.enable = true;
             }
 
-            TalonFX motor;
-            if (steerConfiguration.useCanivore()) {
-                motor = new TalonFX(steerConfiguration.getMotorPort(), steerConfiguration.getCanivoreName());
-                SmartDashboard.putString("STEER_CANivore" + steerConfiguration.getMotorPort(), steerConfiguration.getCanivoreName());
-            } else {
-                motor = new TalonFX(steerConfiguration.getMotorPort());
-            }
+            TalonFX motor = new TalonFX(steerConfiguration.getMotorPort(), steerConfiguration.getCanivoreName());
             checkCtreError(motor.configAllSettings(motorConfiguration, CAN_TIMEOUT_MS), "Failed to configure Falcon 500 settings");
 
             if (hasVoltageCompensation()) {
