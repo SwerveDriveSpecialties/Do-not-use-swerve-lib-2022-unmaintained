@@ -2,6 +2,8 @@
 /.gradle/
 /build/
 /examples/*/build/
+/examples/*/bin/
+/bin/
 
 # Intellij Project Files
 /.idea/
