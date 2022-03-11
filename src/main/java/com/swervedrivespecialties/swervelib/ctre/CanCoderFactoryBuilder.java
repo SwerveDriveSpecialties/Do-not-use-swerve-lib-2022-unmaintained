@@ -10,6 +10,8 @@ import com.swervedrivespecialties.swervelib.AbsoluteEncoderFactory;
 public class CanCoderFactoryBuilder {
     private Direction direction = Direction.COUNTER_CLOCKWISE;
     private int periodMilliseconds = 10;
+    private String canivoreName = "";
+
 
     public CanCoderFactoryBuilder withReadingUpdatePeriod(int periodMilliseconds) {
         this.periodMilliseconds = periodMilliseconds;
@@ -21,6 +23,16 @@ public class CanCoderFactoryBuilder {
         return this;
     }
 
+    public CanCoderFactoryBuilder withCanivoreName(String canivoreName) {
+        this.canivoreName = canivoreName;
+        return this;
+    }
+
+    public boolean useCanivore() {
+        // null or empty canivore name means don't use canivore
+        return !(canivoreName == null || canivoreName.isEmpty());
+    }
+
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() {
         return configuration -> {
             CANCoderConfiguration config = new CANCoderConfiguration();
@@ -28,7 +40,12 @@ public class CanCoderFactoryBuilder {
             config.magnetOffsetDegrees = Math.toDegrees(configuration.getOffset());
             config.sensorDirection = direction == Direction.CLOCKWISE;
 
-            CANCoder encoder = new CANCoder(configuration.getId());
+            CANCoder encoder;
+            if (useCanivore()) {
+                encoder = new CANCoder(configuration.getId(), canivoreName);
+            } else {
+                encoder = new CANCoder(configuration.getId());
+            }
             CtreUtils.checkCtreError(encoder.configAllSettings(config, 250), "Failed to configure CANCoder");
 
             CtreUtils.checkCtreError(encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, periodMilliseconds, 250), "Failed to configure CANCoder update rate");
