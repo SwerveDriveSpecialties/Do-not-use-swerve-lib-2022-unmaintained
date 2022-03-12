@@ -13,6 +13,21 @@ public class Mk3ModuleConfiguration {
     private double driveCurrentLimit = 80.0;
     private double steerCurrentLimit = 20.0;
 
+    private String canivoreName = "";
+
+    public void setCanivoreName(String canivoreName) {
+        this.canivoreName = canivoreName;
+    }
+
+    public String getCanivoreName() {
+        return canivoreName;
+    }
+
+    public boolean useCanivore() {
+        // null or empty canivore name means don't use canivore
+        return !(canivoreName == null || canivoreName.isEmpty());
+    }
+
     public double getNominalVoltage() {
         return nominalVoltage;
     }
@@ -56,6 +71,7 @@ public class Mk3ModuleConfiguration {
                 "nominalVoltage=" + nominalVoltage +
                 ", driveCurrentLimit=" + driveCurrentLimit +
                 ", steerCurrentLimit=" + steerCurrentLimit +
+                ", canivoreName='" + canivoreName +
                 '}';
     }
 }

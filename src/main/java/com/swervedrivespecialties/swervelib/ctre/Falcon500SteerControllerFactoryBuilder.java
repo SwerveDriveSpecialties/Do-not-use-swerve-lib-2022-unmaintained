@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.swervedrivespecialties.swervelib.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static com.swervedrivespecialties.swervelib.ctre.CtreUtils.checkCtreError;
 
 public final class Falcon500SteerControllerFactoryBuilder {
@@ -27,11 +27,23 @@ public final class Falcon500SteerControllerFactoryBuilder {
     private double nominalVoltage = Double.NaN;
     private double currentLimit = Double.NaN;
 
+    private String canivoreName = "";
+
     public Falcon500SteerControllerFactoryBuilder withPidConstants(double proportional, double integral, double derivative) {
         this.proportionalConstant = proportional;
         this.integralConstant = integral;
         this.derivativeConstant = derivative;
         return this;
+    }
+
+    public Falcon500SteerControllerFactoryBuilder withCanivoreName(String canivoreName){
+        this.canivoreName = canivoreName;
+        return this;
+    }
+
+    public boolean useCanivore() {
+        // null or empty canivore name means don't use canivore
+        return !(canivoreName == null || canivoreName.isEmpty());
     }
 
     public boolean hasPidConstants() {
@@ -115,7 +127,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
                 motorConfiguration.supplyCurrLimit.enable = true;
             }
 
-            TalonFX motor = new TalonFX(steerConfiguration.getMotorPort());
+            TalonFX motor = new TalonFX(steerConfiguration.getMotorPort(), steerConfiguration.getCanivoreName());
             checkCtreError(motor.configAllSettings(motorConfiguration, CAN_TIMEOUT_MS), "Failed to configure Falcon 500 settings");
 
             if (hasVoltageCompensation()) {
