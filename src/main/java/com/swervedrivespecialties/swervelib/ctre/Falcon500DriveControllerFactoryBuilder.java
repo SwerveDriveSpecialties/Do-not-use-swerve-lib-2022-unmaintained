@@ -104,5 +104,24 @@ public final class Falcon500DriveControllerFactoryBuilder {
         public double getStateVelocity() {
             return motor.getSelectedSensorVelocity() * sensorVelocityCoefficient;
         }
+
+        @Override
+        public void setCanStatusFramePeriodReductions() {
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, 255);
+            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
+        }
     }
 }
