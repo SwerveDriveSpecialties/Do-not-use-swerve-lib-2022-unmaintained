@@ -40,6 +40,10 @@ dependencies {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId = 'com.SachemAftershock.swervelib'
+            artifactId = 'library'
+            version = '1.01'
+            
             from components.java
         }
     }
