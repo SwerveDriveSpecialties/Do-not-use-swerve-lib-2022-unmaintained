@@ -101,6 +101,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
         }
 
         @Override
+        public double getPosition() {
+            return motor.getSelectedSensorPosition() * (sensorVelocityCoefficient / 10.0);
+        }
+
+        @Override
         public double getStateVelocity() {
             return motor.getSelectedSensorVelocity() * sensorVelocityCoefficient;
         }

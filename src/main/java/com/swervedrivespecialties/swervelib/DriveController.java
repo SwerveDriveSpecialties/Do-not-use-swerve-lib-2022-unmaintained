@@ -5,5 +5,7 @@ public interface DriveController {
 
     double getStateVelocity();
 
+    double getPosition();
+
     void setCanStatusFramePeriodReductions();
 }
