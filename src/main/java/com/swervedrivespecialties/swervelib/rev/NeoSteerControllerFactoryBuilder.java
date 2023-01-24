@@ -170,6 +170,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
         @Override
         public void setCanStatusFramePeriodReductions() {
+            System.out.println("Start Neo Steer Can Reduction.");
             motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
             motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
             motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
