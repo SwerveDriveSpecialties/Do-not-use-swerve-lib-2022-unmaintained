@@ -243,6 +243,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
             motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
             motor.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, 255);
             motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
+            System.out.printf("Drive Falcon %1d: Reduced CAN message rates.", motor.getDeviceID());
         }
 
     }
