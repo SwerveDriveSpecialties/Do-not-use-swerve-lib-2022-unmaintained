@@ -174,6 +174,7 @@ public final class NeoSteerControllerFactoryBuilder {
             motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
             motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
             System.out.printf("Steer Neo %1d: Reduced CAN message rates.", motor.getDeviceId());
+            System.out.println();
         }
 
     }
