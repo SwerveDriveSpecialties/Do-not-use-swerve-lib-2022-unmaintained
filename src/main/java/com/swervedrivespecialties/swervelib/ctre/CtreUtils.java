@@ -4,6 +4,9 @@ import com.ctre.phoenix.ErrorCode;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public final class CtreUtils {
+
+    public final static String kCANivoreBusName = "FRC263CANivore1";
+
     private CtreUtils() {
     }
 
