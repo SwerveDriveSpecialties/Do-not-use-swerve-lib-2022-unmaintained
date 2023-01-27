@@ -16,7 +16,7 @@ allprojects {
         maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
 
         // CTRE
-        maven { url = uri('https://devsite.ctr-electronics.com/maven/release/') }
+        maven { url = uri('https://maven.ctr-electronics.com/release/') }
 
         // REV
         maven { url = uri('https://maven.revrobotics.com/') }
@@ -27,8 +27,8 @@ dependencies {
     implementation 'edu.wpi.first.wpilibj:wpilibj-java:2022.1.1'
 
     // CTRE is implementation because it is not a hard requirement
-    implementation 'com.ctre.phoenix:api-java:5.20.2'
-    implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
+    implementation 'com.ctre.phoenixpro:api-java:23.0.4'
+    implementation 'com.ctre.phoenixpro:wpiapi-java:23.0.4'
 
     // REV is implementation because it is not a hard requirement
     implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
