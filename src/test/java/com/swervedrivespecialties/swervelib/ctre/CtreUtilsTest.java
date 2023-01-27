@@ -1,6 +1,5 @@
 package com.swervedrivespecialties.swervelib.ctre;
 
-import com.ctre.phoenix.ErrorCode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
