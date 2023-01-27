@@ -25,7 +25,7 @@ public class CanCoderFactoryBuilder {
         return configuration -> {
             var magnetSensorConfig = new MagnetSensorConfigs();
             magnetSensorConfig.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-            magnetSensorConfig.MagnetOffset = Math.toDegrees(configuration.getOffset());
+            magnetSensorConfig.MagnetOffset = Math.toDegrees(configuration.getOffset()) / 360.0;
             magnetSensorConfig.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
             CANcoder encoder = new CANcoder(configuration.getId(), CtreUtils.kCANivoreBusName);
