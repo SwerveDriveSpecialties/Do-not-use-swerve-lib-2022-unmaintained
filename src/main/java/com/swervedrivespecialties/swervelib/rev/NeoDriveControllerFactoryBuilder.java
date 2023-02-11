@@ -84,5 +84,10 @@ public final class NeoDriveControllerFactoryBuilder {
         public double getStateVelocity() {
             return encoder.getVelocity();
         }
+
+        @Override
+        public double getPosition() {
+            return encoder.getPosition();
+        }
     }
 }

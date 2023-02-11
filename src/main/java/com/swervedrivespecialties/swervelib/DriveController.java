@@ -5,5 +5,5 @@ public interface DriveController {
 
     double getStateVelocity();
 
-    // double getPosition();
+    double getPosition();
 }
