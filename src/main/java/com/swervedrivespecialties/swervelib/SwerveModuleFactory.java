@@ -1,5 +1,7 @@
 package com.swervedrivespecialties.swervelib;
 
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
@@ -94,6 +96,21 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
 
             driveController.setReferenceVoltage(driveVoltage);
             steerController.setReferenceAngle(steerAngle);
+        }
+
+        @Override
+        public SteerController getSteerController() {
+           return steerController;
+        }
+
+        @Override
+        public DriveController getDriveController() {
+            return driveController;
+        }
+
+        @Override
+        public void resetAngle() {
+            steerController.resetAngle();
         }
     }
 }
