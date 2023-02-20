@@ -107,7 +107,12 @@ public final class Falcon500DriveControllerFactoryBuilder {
 
         @Override
         public double getPosition() {
-            return 0; // TODO: implement
+            return motor.getSelectedSensorPosition();
+        }
+
+        @Override
+        public void setPosition(double position) {
+            motor.setSelectedSensorPosition(position);
         }
     }
 }
