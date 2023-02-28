@@ -3,6 +3,7 @@ package com.swervedrivespecialties.swervelib;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 public interface SteerController {
     double getReferenceAngle();
@@ -18,4 +19,6 @@ public interface SteerController {
     RelativeEncoder getMotorEncoder();
 
     AbsoluteEncoder getAbsoluteEncoder();
+
+    SimDeviceSim getSimulatedMotor();
 }

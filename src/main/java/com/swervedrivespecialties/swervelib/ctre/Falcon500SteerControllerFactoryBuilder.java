@@ -8,6 +8,7 @@ import com.swervedrivespecialties.swervelib.*;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import static com.swervedrivespecialties.swervelib.ctre.CtreUtils.checkCtreError;
 
@@ -247,6 +248,11 @@ public final class Falcon500SteerControllerFactoryBuilder {
         @Override
         public AbsoluteEncoder getAbsoluteEncoder() {
             return absoluteEncoder;
+        }
+
+        @Override
+        public SimDeviceSim getSimulatedMotor() {
+            throw new UnsupportedOperationException("Unimplemented method 'getSimulatedMotor'");
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.swervedrivespecialties.swervelib;
 
-import com.revrobotics.RelativeEncoder;
-
 public interface SwerveModule {
     double getDriveVelocity();
 
@@ -19,4 +17,5 @@ public interface SwerveModule {
 
     DriveController getDriveController();
 
+    void simulationPeriodic();
 }

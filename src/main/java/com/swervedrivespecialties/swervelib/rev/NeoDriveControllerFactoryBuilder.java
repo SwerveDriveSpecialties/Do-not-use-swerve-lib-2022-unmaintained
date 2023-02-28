@@ -6,6 +6,8 @@ import com.revrobotics.RelativeEncoder;
 import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
 
@@ -69,6 +71,7 @@ public final class NeoDriveControllerFactoryBuilder {
     private static class ControllerImplementation implements DriveController {
         private final CANSparkMax motor;
         private final RelativeEncoder encoder;
+        private SimDeviceSim simMotor = null;
 
         private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) {
             this.motor = motor;
@@ -93,6 +96,14 @@ public final class NeoDriveControllerFactoryBuilder {
         @Override
         public void setPosition(double position) {
             encoder.setPosition(0);
+        }
+
+        @Override
+        public SimDeviceSim getSimulatedMotor() {
+            if (simMotor == null) {
+                simMotor = new SimDeviceSim("SPARK MAX [" + motor.getDeviceId() + "]");
+            }
+            return simMotor;
         }
     }
 }

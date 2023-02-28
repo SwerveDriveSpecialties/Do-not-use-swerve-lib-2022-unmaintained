@@ -10,6 +10,8 @@ import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+
 public final class Falcon500DriveControllerFactoryBuilder {
     private static final double TICKS_PER_ROTATION = 2048.0;
 
@@ -113,6 +115,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
         @Override
         public void setPosition(double position) {
             motor.setSelectedSensorPosition(position);
+        }
+
+        @Override
+        public SimDeviceSim getSimulatedMotor() {
+            throw new UnsupportedOperationException("Unimplemented method 'getSimulatedMotor'");
         }
     }
 }
