@@ -10,6 +10,7 @@ import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 public final class Falcon500DriveControllerFactoryBuilder {
@@ -120,6 +121,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
         @Override
         public SimDeviceSim getSimulatedMotor() {
             throw new UnsupportedOperationException("Unimplemented method 'getSimulatedMotor'");
+        }
+
+        @Override
+        public MotorController getMotorController() {
+            throw new UnsupportedOperationException("Unimplemented method 'getMotorController'");
         }
     }
 }

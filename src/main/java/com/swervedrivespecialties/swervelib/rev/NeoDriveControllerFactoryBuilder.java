@@ -6,6 +6,8 @@ import com.revrobotics.RelativeEncoder;
 import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
+
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
@@ -96,6 +98,11 @@ public final class NeoDriveControllerFactoryBuilder {
         @Override
         public void setPosition(double position) {
             encoder.setPosition(0);
+        }
+
+        @Override
+        public MotorController getMotorController() {
+            return motor;
         }
 
         @Override
