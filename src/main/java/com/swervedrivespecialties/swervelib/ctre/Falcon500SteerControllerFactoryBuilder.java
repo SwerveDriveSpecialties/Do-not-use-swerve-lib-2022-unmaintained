@@ -3,8 +3,12 @@ package com.swervedrivespecialties.swervelib.ctre;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.revrobotics.RelativeEncoder;
 import com.swervedrivespecialties.swervelib.*;
+
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import static com.swervedrivespecialties.swervelib.ctre.CtreUtils.checkCtreError;
 
@@ -223,6 +227,32 @@ public final class Falcon500SteerControllerFactoryBuilder {
             }
 
             return motorAngleRadians;
+        }
+
+        @Override
+        public void resetAngle() {
+            double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
+            motor.setSelectedSensorPosition(absoluteAngle / motorEncoderPositionCoefficient);
+        }
+
+        @Override
+        public MotorController getMotorController() {
+            throw new UnsupportedOperationException("Unimplemented method 'getMotorController'");
+        }
+
+        @Override
+        public RelativeEncoder getMotorEncoder() {
+            throw new UnsupportedOperationException("Unimplemented method 'getMotorEncoder'");
+        }
+
+        @Override
+        public AbsoluteEncoder getAbsoluteEncoder() {
+            return absoluteEncoder;
+        }
+
+        @Override
+        public SimDeviceSim getSimulatedMotor() {
+            throw new UnsupportedOperationException("Unimplemented method 'getSimulatedMotor'");
         }
     }
 }

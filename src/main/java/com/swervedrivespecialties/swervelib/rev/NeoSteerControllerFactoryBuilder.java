@@ -2,7 +2,10 @@ package com.swervedrivespecialties.swervelib.rev;
 
 import com.revrobotics.*;
 import com.swervedrivespecialties.swervelib.*;
+
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
 
@@ -104,6 +107,7 @@ public final class NeoSteerControllerFactoryBuilder {
         private final SparkMaxPIDController controller;
         private final RelativeEncoder motorEncoder;
         private final AbsoluteEncoder absoluteEncoder;
+        private SimDeviceSim simMotor = null;
 
         private double referenceAngleRadians = 0;
 
@@ -166,6 +170,35 @@ public final class NeoSteerControllerFactoryBuilder {
             }
 
             return motorAngleRadians;
+        }
+
+        @Override
+        public void resetAngle() {
+            double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
+            motorEncoder.setPosition(absoluteAngle);
+        }
+
+        @Override
+        public MotorController getMotorController() {
+            return motor;
+        }
+
+        @Override
+        public RelativeEncoder getMotorEncoder() {
+            return motorEncoder;
+        }
+
+        @Override
+        public AbsoluteEncoder getAbsoluteEncoder() {
+            return absoluteEncoder;
+        }
+
+        @Override
+        public SimDeviceSim getSimulatedMotor() {
+            if (simMotor == null) {
+                simMotor = new SimDeviceSim("SPARK MAX [" + motor.getDeviceId() + "]");
+            }
+            return simMotor;
         }
     }
 }
